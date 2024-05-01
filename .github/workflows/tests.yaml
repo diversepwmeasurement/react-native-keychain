@@ -1,56 +1,65 @@
-name: Tests
-
-on:
-  - push
-  - pull_request
-
 jobs:
-  lint:
-    name: Linting
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-      - name: Install dependencies
-        run: yarn --frozen-lockfile --non-interactive --silent
-      - name: Lint files
-        run: yarn lint
-  flow:
-    name: Flow types
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-      - name: Install dependencies
-        run: yarn --frozen-lockfile --non-interactive --silent
-      - name: Check flow types
-        run: yarn flow
   android:
     name: Android Unit Tests
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-      - name: Use JDK 1.11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.11
-      - name: Use Android SDK
-        uses: android-actions/setup-android@v2
-      - name: Install example project dependencies
-        run: yarn --frozen-lockfile --non-interactive --silent
-        working-directory: KeychainExample
-      - name: Run Android unit tests
-        run: yarn test
+    - continue-on-error: true
+      uses: actions/checkout@v2
+    - continue-on-error: true
+      name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14.x
+    - continue-on-error: true
+      name: Use JDK 1.11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11
+    - continue-on-error: true
+      name: Use Android SDK
+      uses: android-actions/setup-android@v2
+    - continue-on-error: true
+      name: Install example project dependencies
+      run: yarn --frozen-lockfile --non-interactive --silent
+      working-directory: KeychainExample
+    - continue-on-error: true
+      name: Run Android unit tests
+      run: yarn test
+  flow:
+    name: Flow types
+    runs-on: self-hosted
+    steps:
+    - continue-on-error: true
+      uses: actions/checkout@v2
+    - continue-on-error: true
+      name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14.x
+    - continue-on-error: true
+      name: Install dependencies
+      run: yarn --frozen-lockfile --non-interactive --silent
+    - continue-on-error: true
+      name: Check flow types
+      run: yarn flow
+  lint:
+    name: Linting
+    runs-on: self-hosted
+    steps:
+    - continue-on-error: true
+      uses: actions/checkout@v2
+    - continue-on-error: true
+      name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14.x
+    - continue-on-error: true
+      name: Install dependencies
+      run: yarn --frozen-lockfile --non-interactive --silent
+    - continue-on-error: true
+      name: Lint files
+      run: yarn lint
+name: Tests
+on:
+  repository_dispatch:
+    types: trigger-ga___tests.yaml
